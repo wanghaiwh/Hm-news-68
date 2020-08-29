@@ -14,13 +14,12 @@
   <van-field
     v-model="password"
     type="password"
-    name="密码"
     label="密码"
     placeholder="请输入密码"
     :rules="rules.password"
   />
   <div style="margin: 16px;">
-    <van-button round block type="info" native-type="submit">
+    <van-button round block type="info" native-type="submit" style="backgroundColor:#cc3300; border:0;">
       登录
     </van-button>
   </div>
@@ -32,6 +31,13 @@
 
 <script>
 export default {
+  created() {
+    // 解构
+    console.log(this.$route)
+    const { username, password } = this.$route.params
+    this.username = username
+    this.password = password
+  },
   methods: {
     async login() {
       const res = await this.$axios.post('/login', {
@@ -43,10 +49,14 @@ export default {
       if (statusCode === 200) {
         // 在组件中必须this.$toast才可以使用
         this.$toast.success(message)
+        console.log('登录成功')
         // 成功后跳转到个人中心
-        this.$router.push('/user')
+        // this.$router.push('/user')
+        this.$router.push({
+          path: '/user'
+        })
       } else {
-        this.$router.fail('登陆失败')
+        this.$toast.fail('登陆失败')
       }
     }
   },
@@ -70,7 +80,10 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+  // scoped: 作用域只会在当前组件生效
+        // scoped原理
+            // 1.给当前模板中的所有元素都添加一个特殊的属性 data-v-xxx
   .tips {
     font-size: 16px;
     text-align: right;

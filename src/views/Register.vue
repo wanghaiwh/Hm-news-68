@@ -1,6 +1,6 @@
 <template>
   <div>
-    <hm-headr>注册</hm-headr>
+    <hm-header>注册</hm-header>
     <hm-logo></hm-logo>
 
     <van-form @submit="register">
@@ -25,7 +25,7 @@
     :rules="rules.password"
   />
   <div style="margin: 16px;">
-    <van-button round block type="info" native-type="submit">
+    <van-button round block type="info" native-type="submit" style="backgroundColor:#cc3300; border:0;">
       注册
     </van-button>
   </div>
@@ -59,7 +59,26 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    async register() {
+      console.log('注册')
+      const res = await this.$axios.post('/register', this.user)
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        this.$toast.success(message)
+        // 注册成功跳转到登录页面
+        // this.$router.push(`/login?username=${this.user.username}&password=${this.user.password}`)
+        this.$router.push({
+          name: 'login',
+          params: this.user
+        })
+      } else {
+        this.$toast.fail(message)
+      }
+    }
   }
 }
 </script>
-<style></style>
+<style lang="less" scoped>
+</style>

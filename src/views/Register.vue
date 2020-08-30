@@ -37,6 +37,7 @@
 
 <script>
 export default {
+  // 可以写3个路由钩子函数
   data() {
     return {
       user: {

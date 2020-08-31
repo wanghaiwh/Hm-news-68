@@ -18,33 +18,48 @@
     placeholder="请输入密码"
     :rules="rules.password"
   />
-      <div style="margin: 16px;">
-      <van-button round block type="info" native-type="submit">
+    <div style="margin: 16px;">
+    <van-button round block type="info" native-type="submit">
       登录
     </van-button>
   </div>
+  <p class="tips">没有账号？去<router-link to="/register">注册</router-link></p>
 </van-form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
+  created() {
+    // 结构
+    console.log(this.$route)
+    const { username, password } = this.$route.params
+    this.username = username
+    this.password = password
+  },
   methods: {
     async login() {
-      const res = await axios.post('http://localhost:3000/login', {
+      const res = await this.$axios.post('/login', {
         username: this.username,
         password: this.password
       })
-      const { statusCode, message } = res.data
+
+      const { statusCode, message, data } = res.data
       if (statusCode === 200) {
-        // 使用toast提示框 组件中必需要this.$toast才可以使用
+        // 使用toast 组件中要this.$toast才能使用
         this.$toast.success(message)
+        // 保存token
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('userId', data.user.id)
+        console.log('登录成功')
+        // 登陆成功跳转个人中心页面
+        this.$route.push({
+          path: '/user'
+        })
       } else {
-        this.$toast.fail(message)
+        this.$toast.fail('登录失败')
       }
     }
-
   },
   data() {
     return {
@@ -63,6 +78,23 @@ export default {
     }
   }
 }
+
 </script>
 
-<style></style>
+<style lang="less" scoped>
+  .tips {
+    font-size: 16px;
+    text-align: right;
+    padding-right: 20px;
+    a {
+      color: orange;
+    }
+  }
+
+//  /deep/深度选择器
+  /deep/.hm-header {
+    .title {
+      color: gold;
+    }
+  }
+</style>

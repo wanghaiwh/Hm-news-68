@@ -4,17 +4,19 @@ import router from './router'
 
 // 导入通用的样式
 import './styles/base.less'
-// 导入字体样式
 import './styles/iconfont.css'
 
 // 导入Vant
-// import Vant from 'vant'
-import { Button } from 'vant'
-// import 'vant/lib/index.css'
-// console.log(Vant)
-// 全局将vantage所有组件都导入
-// Vue.use(Vant)
-Vue.use(Button)
+import Vant from 'vant'
+import 'vant/lib/index.css'
+
+import HmHeader from './components/HmHeader.vue'
+import HmLogo from './components/HmLogo.vue'
+// 全局注册组件
+Vue.component('HmHeader', HmHeader)
+Vue.component('HmLogo', HmLogo)
+// 全局将van所有组件都导入
+Vue.use(Vant)
 
 Vue.config.productionTip = false
 new Vue({

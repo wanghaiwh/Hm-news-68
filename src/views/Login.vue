@@ -1,14 +1,68 @@
 <template>
   <div>
-    登录组件
-    <div class="iconfont icondianzan"></div>
-    <van-button type="primary">主要按钮</van-button>
-    <van-button type="info">信息按钮</van-button>
-    <van-button type="default">默认按钮</van-button>
-    <van-button type="warning">警告按钮</van-button>
-    <van-button type="danger">危险按钮</van-button>
+      <hm-header>登录</hm-header>
+      <hm-logo></hm-logo>
+  <van-form @submit="login">
+    <van-field
+    v-model="username"
+    name="用户名"
+    label="账号"
+    placeholder="请输入账号"
+    :rules="rules.username"
+  />
+    <van-field
+    v-model="password"
+    type="password"
+    name="密码"
+    label="密码"
+    placeholder="请输入密码"
+    :rules="rules.password"
+  />
+      <div style="margin: 16px;">
+      <van-button round block type="info" native-type="submit">
+      登录
+    </van-button>
+  </div>
+</van-form>
   </div>
 </template>
+
 <script>
+import axios from 'axios'
+export default {
+  methods: {
+    async login() {
+      const res = await axios.post('http://localhost:3000/login', {
+        username: this.username,
+        password: this.password
+      })
+      const { statusCode, message } = res.data
+      if (statusCode === 200) {
+        // 使用toast提示框 组件中必需要this.$toast才可以使用
+        this.$toast.success(message)
+      } else {
+        this.$toast.fail(message)
+      }
+    }
+
+  },
+  data() {
+    return {
+      username: '',
+      password: '',
+      rules: {
+        username: [
+          { required: true, message: '请填写用户名', trigger: 'onChange' },
+          { pattern: /^\d{5,11}$/, message: '用户名长度是5-11位数字', trigger: 'onChange' }
+        ],
+        password: [
+          { required: true, message: '请填写密码', trigger: 'onChange' },
+          { pattern: /^\d{3,9}$/, message: '密码长度是3-9位数字', trigger: 'onChange' }
+        ]
+      }
+    }
+  }
+}
 </script>
+
 <style></style>
